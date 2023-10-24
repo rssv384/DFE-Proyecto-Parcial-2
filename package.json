@@ -1,0 +1,19 @@
+{
+	"name": "dfe-proyecto-parcial-2",
+	"version": "1.0.0",
+	"description": "To-Do List Web | Proyecto 2do Parcial - Diseño de Front End",
+	"main": "index.html",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "concurrently \"npm run watch:sass\" \"npm run serve\"",
+		"serve": "live-server src",
+		"watch:sass": "node-sass src/assets/scss/styles.scss src/assets/css/styles.css --watch"
+	},
+	"devDependencies": {
+		"concurrently": "^8.2.1",
+		"live-server": "^1.2.2",
+		"node-sass": "^9.0.0"
+	},
+	"author": "Raúl Soto",
+	"license": "MIT"
+}
