@@ -1,0 +1,57 @@
+@import 'variables';
+
+* {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	box-sizing: border-box;
+}
+
+body {
+	background-color: $background-cream;
+	font-family: $body-font;
+	font-size: $font-size;
+	color: $body-font-color;
+}
+
+main {
+	padding-top: $header-height;
+}
+
+section {
+	background-color: $background-light;
+	box-shadow: $box-shadow;
+	height: fit-content;
+	border: 3px solid $secondary-color;
+	border-radius: 15px;
+	margin: 3rem 3rem;
+	padding: 2rem 1.5rem;
+	flex-wrap: wrap;
+}
+
+h1,
+h2,
+h3 {
+	font-family: $title-font;
+	font-weight: 700;
+	color: $secondary-color;
+}
+
+h1 {
+	font-size: 6rem;
+	color: $secondary-color;
+}
+
+h2 {
+	font-size: 3rem;
+}
+
+h3 {
+	font-size: 2rem;
+}
+
+hr {
+	border: 3px solid $primary-color;
+	width: 5rem;
+	margin: 2rem auto;
+}

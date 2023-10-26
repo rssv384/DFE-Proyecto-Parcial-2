@@ -4,11 +4,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--- Google Fonts --->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Josefin+Slab:wght@400;700&display=swap"
+        rel="stylesheet">
+    <!--- CSS --->
+    <link rel="stylesheet" type="text/css" href="assets/css/styles.css">
     <title>To-Do List | DFE Parcial 2</title>
 </head>
 
 <body>
+    <header class="flex-row justify-center align-items-center text-center">
+        <h1>TO <img src="assets/img/logo.png" alt="To-Do List Logo"> DO</h1>
+    </header>
 
+    <main>
+        <section id="filter-section" class="flex-column justify-center align-items-center">
+            <h2>Filtrar Tareas</h2>
+            <hr>
+            <form id="filter-form">
+                <div id="filter-fields-container">
+                    <div class="filter-field">
+                        <label for="title-filter">Título:</label>
+                        <input type="text" id="title-filter" placeholder="Título de la tarea">
+                    </div>
+
+                    <div class="filter-field">
+                        <label for="status-filter">Estado:</label>
+                        <select id="status-filter">
+                            <option value="" selected>Cualquiera</option>
+                            <option value="true">Completada</option>
+                            <option value="false">Pendiente</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="priority-filter">Prioridad:</label>
+                        <select id="priority-filter">
+                            <option value="" selected>Cualquiera</option>
+                            <option value="Alta">Alta</option>
+                            <option value="Media">Media</option>
+                            <option value="Baja">Baja</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-field">
+                        <label for="tag-filter">Tag:</label>
+                        <select id="tag-filter">
+                            <option value="" selected>Todos los tags</option>
+                            <!--- Llenado dinámico de las opciones mediante API --->
+                        </select>
+                    </div>
+
+                    <div class="filter-field">
+                        <label for="due-date-filter">Fecha límite:</label>
+                        <input type="date" id="due-date-filter">
+                    </div>
+                </div>
+
+                <div class="buttons-container">
+                    <button type="submit" id="apply-filters" class="btn-submit">Aplicar Filtros</button>
+                    <button type="reset" id="reset-filters" class="btn-reset">Restablecer</button>
+                </div>
+            </form>
+
+        </section>
+
+        <section id="to-do-list-section" class="flex-column justify-center align-items-center">
+            <h2>Mi Lista</h2>
+            <hr>
+            <button id="add-task" class="btn-submit">+ Nueva Tarea</button>
+
+            <!--- TABLA TO-DO LIST --->
+            <div class="table-container">
+                <table id="to-do-list-table">
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Descripción</th>
+                            <th>Estado</th>
+                            <th>Prioridad</th>
+                            <th>Tag</th>
+                            <th>Fecha Límite</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="to-do-list-table-body">
+                        <!-- Llenado dinámico de la tabla mediante una API -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="message" class="message">
+                <p>No se encontraron tareas para mostrar.</p>
+            </div>
+
+            <!--- MODAL --->
+            <div id="modal-background" class="modal-background">
+
+            </div>
+
+            <div id="modal" class="modal">
+
+                <h2>Nueva Tarea</h2>
+                <hr>
+                <form id="add-task-form">
+                    <div>
+                        <label for="title">Título:</label>
+                        <input type="text" id="title" placeholder="Título de la tarea">
+                    </div>
+
+                    <div class="flex-row justify-left">
+                        <label for="status">Completada?</label>
+                        <input type="checkbox" id="status" disabled>
+                    </div>
+
+                    <div>
+                        <label for="priority">Prioridad:</label>
+                        <select id="priority">
+                            <option value="Alta" selected>Alta</option>
+                            <option value="Media">Media</option>
+                            <option value="Baja">Baja</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="tag">Tag:</label>
+                        <input type="text" id="tag" placeholder="Tag">
+                    </div>
+
+                    <div>
+                        <label for="due-date">Fecha límite:</label>
+                        <input type="date" id="due-date">
+                    </div>
+
+                    <div class="buttons-container">
+                        <button type="submit" id="submit-task" class="btn-submit">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+    <!--- JavaScript --->
+    <script src="/js/script.js"></script>
 </body>
 
 </html>

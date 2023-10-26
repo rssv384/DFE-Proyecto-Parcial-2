@@ -1,0 +1,23 @@
+@import 'variables';
+
+header {
+	z-index: 1;
+	position: fixed;
+	width: 100%;
+	height: $header-height;
+	background-color: $background-cream;
+	border-bottom: 2px solid $secondary-color;
+	padding: 1rem;
+
+	img {
+		height: 5.5rem;
+		width: auto;
+		padding-top: 10px;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	header img {
+		height: 4.5rem;
+	}
+}

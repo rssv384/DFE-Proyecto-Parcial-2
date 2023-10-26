@@ -1,0 +1,51 @@
+@import './variables';
+
+.table-container {
+	max-width: 100%;
+	overflow-x: auto;
+	margin: 2rem 1rem;
+}
+
+table {
+	width: 100%;
+	overflow-x: auto;
+	border-collapse: collapse;
+	white-space: nowrap;
+	font-size: 1rem;
+
+	thead tr {
+		background-color: $primary-color;
+		color: #ffffff;
+		text-align: center;
+
+		th {
+			text-align: center;
+			font-size: 1.125rem;
+			padding: 2rem 1.25rem;
+			white-space: nowrap;
+		}
+	}
+
+	tbody tr {
+		border-bottom: 1px solid $primary-color;
+		border-collapse: collapse;
+
+		&:nth-of-type(even) {
+			background-color: $background-light;
+		}
+
+		&:last-of-type {
+			border-bottom: 3px solid $primary-color;
+		}
+
+		td {
+			padding: 1rem 1.25rem;
+			border: none;
+			white-space: wrap;
+		}
+	}
+}
+
+.message {
+	font-size: 1.25rem;
+}

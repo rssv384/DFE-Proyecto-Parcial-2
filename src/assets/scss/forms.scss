@@ -1,0 +1,119 @@
+@import 'variables';
+
+#filter-form,
+#add-task-form {
+	display: flex;
+	// gap: 1.25rem;
+}
+
+form {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 1.5rem;
+}
+
+#filter-fields-container,
+.buttons-container {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 2rem;
+}
+
+.form-field {
+	display: inline-block;
+}
+
+input,
+label,
+select {
+	display: block;
+}
+
+label {
+	font-family: $title-font;
+	font-size: 1.5rem;
+	font-weight: 700;
+	margin-bottom: 0.7rem;
+}
+
+input,
+textarea,
+select {
+	font-size: 1rem;
+	padding: 1rem;
+	border: 2px solid $secondary-color;
+	border-radius: 15px;
+
+	&:focus,
+	&:hover,
+	&:active {
+		border: 2px solid $primary-color;
+	}
+}
+
+input[type='text'] {
+	flex-grow: 1;
+	min-width: 200px;
+}
+
+input[type='date'] {
+	width: 150px;
+	// display: flex;
+	// flex-direction: row;
+}
+
+input[type='checkbox'] {
+	width: 1.25rem;
+	height: 1.25rem;
+	margin-left: 2rem;
+}
+
+button {
+	padding: 1rem;
+	font-size: 1.25rem;
+	border-radius: 10px;
+	width: auto;
+	height: fit-content;
+	cursor: pointer;
+}
+
+.btn-submit {
+	border: 2px solid $primary-color;
+	background-color: $primary-color;
+	color: #ffffff;
+}
+
+.btn-submit:hover {
+	background-color: lighten($color: $primary-color, $amount: 20);
+}
+
+.btn-reset {
+	border: 2px solid $secondary-color;
+	background-color: $secondary-color;
+	color: #ffffff;
+}
+
+.btn-reset:hover {
+	background-color: lighten($color: $secondary-color, $amount: 10);
+}
+
+.btn-edit {
+	border: 2px solid $primary-color;
+	background-color: transparent;
+	color: $primary-color;
+}
+
+.btn-edit:hover {
+	border-color: lighten($color: $primary-color, $amount: 20);
+}
+
+.btn-delete {
+	border: 2px solid $secondary-color;
+	background-color: transparent;
+	color: $secondary-color;
+}
+
+.btn-delete:hover {
+	border-color: lighten($color: $secondary-color, $amount: 10);
+}
