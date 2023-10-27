@@ -1,7 +1,4 @@
-toDoList = [];
-
 // #region DATA MODELS
-
 // Definir clase Task
 class Task {
 	constructor(id, title, description, completed, priority, tag, dueDate) {
@@ -24,7 +21,7 @@ function mapTasksData(data) {
 			item.completed,
 			item.priority,
 			item.tag,
-			new Date(item.date)
+			new Date(item.dueDate)
 		);
 	});
 }
@@ -56,12 +53,13 @@ function displayToDoList(tasks) {
 		let taskStatus = task.completed ? 'Completada' : 'Pendiente';
 
 		row.innerHTML = `
+		<td>${task.id}</td>
 		<td>${task.title}</td>
 		<td>${task.description}</td>
 		<td>${taskStatus}</td>
 		<td>${task.priority}</td>
 		<td>${task.tag}</td>
-		<td>${task.dueDate.toLocaleDateString('en-MX')}</td>
+		<td>${task.dueDate.toLocaleDateString('es-MX', { timeZone: 'UTC' })}</td>
 		<td>
 		  <button class="btn-edit" task-id="${task.id}">Editar</button>
 		</td>
@@ -72,6 +70,8 @@ function displayToDoList(tasks) {
 
 		tableBody.appendChild(row);
 	});
+	initDeleteTaskButtonHandler();
+	initEditButtonHandler();
 }
 
 // Funcion que limpia la tabla
@@ -79,6 +79,12 @@ function clearTable() {
 	const tableBody = document.getElementById('to-do-list-table-body');
 
 	tableBody.innerHTML = '';
+}
+
+// Recargar la tabla de tareas
+function reloadToDoList() {
+	document.getElementById('filter-form').reset();
+	getAllTasks();
 }
 
 // Funcion que muestra mensaje de carga de datos
@@ -105,6 +111,26 @@ function hideMessage() {
 
 	message.style.display = 'none';
 }
+
+// Función para eliminar tareas de la lista
+function initDeleteTaskButtonHandler() {
+	document.querySelectorAll('.btn-delete').forEach((button) => {
+		button.addEventListener('click', () => {
+			const taskId = button.getAttribute('task-id');
+			deleteTask(taskId);
+		});
+	});
+}
+
+function initEditButtonHandler() {
+	document.querySelectorAll('.btn-edit').forEach((button) => {
+		button.addEventListener('click', () => {
+			const taskId = button.getAttribute('task-id');
+			getTaskData(taskId);
+			showModal('edit');
+		});
+	});
+}
 // #endregion
 
 // #region FILTERS
@@ -116,7 +142,6 @@ function initFilterButtonsHandler() {
 
 	document.getElementById('filter-form').addEventListener('reset', (event) => {
 		event.preventDefault();
-		console.log('Restablecer filtros.');
 	});
 }
 // #endregion
@@ -125,22 +150,43 @@ function initFilterButtonsHandler() {
 // Event Handlers para abrir/cerrar el modal, agregar/eliminar item de la venta
 // y confirmar ventar
 function initAddTaskButtonsHandler() {
-	document.getElementById('add-task').addEventListener('click', () => {
-		document.getElementById('modal-background').style.display = 'block';
-		document.getElementById('modal').style.display = 'block';
-		console.log('Click en Nueva Tarea');
+	document.getElementById('add-task').addEventListener('click', (event) => {
+		event.preventDefault();
+		showModal('add');
 	});
 
 	document.getElementById('modal-background').addEventListener('click', () => {
 		closeModal();
 	});
 
-	document
-		.getElementById('add-task-form')
-		.addEventListener('submit', (event) => {
-			event.preventDefault();
-			console.log('Nueva tarea añadida con éxito.');
-		});
+	const taskForm = document.getElementById('add-task-form');
+
+	taskForm.addEventListener('submit', (event) => {
+		event.preventDefault();
+		const task = processTaskForm();
+		const mode = taskForm.getAttribute('mode');
+		if (mode === 'add') {
+			addTask(task);
+		} else if (mode === 'edit') {
+			console.log(task);
+			editTask(task);
+		}
+	});
+}
+
+// Mostrar modal
+function showModal(mode) {
+	document.getElementById('modal-background').style.display = 'block';
+	document.getElementById('modal').style.display = 'block';
+
+	// Definir modo del formulario: EDITAR o AGREGAR tarea
+	document.getElementById('add-task-form').setAttribute('mode', mode);
+
+	if (mode === 'add') {
+		document.getElementById('completed').disabled = true;
+	} else if (mode === 'edit') {
+		document.getElementById('completed').disabled = false;
+	}
 }
 
 // Cerrar modal y restablecer estado
@@ -149,9 +195,99 @@ function closeModal() {
 	document.getElementById('modal-background').style.display = 'none';
 	document.getElementById('modal').style.display = 'none';
 }
+
+// Función para procesar el formulario de tarea
+function processTaskForm() {
+	const id =
+		document.getElementById('id').value === ''
+			? null
+			: document.getElementById('id').value;
+	const title = document.getElementById('title').value;
+	const description = document.getElementById('description').value;
+	const completed = document.getElementById('completed').checked;
+	const priority = document.getElementById('priority').value;
+	const tag = document.getElementById('tag').value;
+	const dueDate = document.getElementById('due-date').value;
+
+	// Crear objeto Task
+	const newTask = new Task(
+		id,
+		title,
+		description,
+		completed,
+		priority,
+		tag,
+		dueDate
+	);
+
+	return newTask;
+}
+// #endregion
+
+// #region API USAGE
+// Cargar datos de las tareas
+function getAllTasks() {
+	fetchAPI('tasks', 'GET').then((data) => {
+		const toDoList = mapTasksData(data);
+		displayTasksView(toDoList);
+	});
+}
+
+// Agregar una nueva tarea
+function addTask(newTask) {
+	fetchAPI('tasks', 'POST', newTask).then((newTask) => {
+		closeModal();
+		// Recargar tabla de la To-Do List
+		reloadToDoList();
+		// Mostrar mensaje de registro exitoso
+		window.alert(
+			`Se ha agregado una nueva tarea!\n${newTask.id}: ${newTask.title}`
+		);
+	});
+}
+
+// Obtener datos de una tarea específica
+function getTaskData(taskId) {
+	fetchAPI(`tasks/${taskId}`, 'GET').then((data) => {
+		// Llenar datos del formulario para editar
+		document.getElementById('id').value = data.id;
+		document.getElementById('title').value = data.title;
+		document.getElementById('description').value = data.description;
+		document.getElementById('completed').checked = data.completed;
+		document.getElementById('priority').value = data.priority;
+		document.getElementById('tag').value = data.tag;
+		document.getElementById('due-date').value = data.dueDate;
+	});
+}
+
+// Editar datos de la tarea
+function editTask(editedTask) {
+	fetchAPI(`tasks/${editedTask.id}`, 'PUT', editedTask).then((editedTask) => {
+		closeModal();
+		// Recargar tabla de la To-Do List
+		reloadToDoList();
+		// Mostrar mensaje de edición exitosa
+		window.alert(`La tarea ${editedTask.id} se ha actualizado con éxito!`);
+	});
+}
+
+// Eliminar tarea
+function deleteTask(taskId) {
+	const confirmation = window.confirm(
+		`¿Desea eliminar la tarea ${taskId}? No podrá deshacer la operación.`
+	);
+
+	if (confirmation) {
+		fetchAPI(`tasks/${taskId}`, 'DELETE').then(() => {
+			reloadToDoList();
+			window.alert(`La tarea ${taskId} ha sido eliminada con éxito.`);
+		});
+	}
+}
 // #endregion
 
 // #region INIT FUNCTIONALITY
+initFilterButtonsHandler();
 initAddTaskButtonsHandler();
-displayTasksView(toDoList);
+getAllTasks();
 // #endregion

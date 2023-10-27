@@ -81,6 +81,7 @@
                 <table id="to-do-list-table">
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Título</th>
                             <th>Descripción</th>
                             <th>Estado</th>
@@ -110,15 +111,23 @@
 
                 <h2>Nueva Tarea</h2>
                 <hr>
-                <form id="add-task-form">
+                <form id="add-task-form" mode="add">
+                    <div>
+                        <input type="hidden" id="id" value="">
+                    </div>
                     <div>
                         <label for="title">Título:</label>
-                        <input type="text" id="title" placeholder="Título de la tarea">
+                        <input type="text" id="title" placeholder="Título de la tarea" required>
+                    </div>
+
+                    <div>
+                        <label for="description">Título:</label>
+                        <input type="text" id="description" placeholder="Descripción" required>
                     </div>
 
                     <div class="flex-row justify-left">
-                        <label for="status">Completada?</label>
-                        <input type="checkbox" id="status" disabled>
+                        <label for="completed">Completada?</label>
+                        <input type="checkbox" id="completed" disabled>
                     </div>
 
                     <div>
@@ -132,12 +141,12 @@
 
                     <div>
                         <label for="tag">Tag:</label>
-                        <input type="text" id="tag" placeholder="Tag">
+                        <input type="text" id="tag" placeholder="Tag" required>
                     </div>
 
                     <div>
                         <label for="due-date">Fecha límite:</label>
-                        <input type="date" id="due-date">
+                        <input type="date" id="due-date" required>
                     </div>
 
                     <div class="buttons-container">
@@ -148,6 +157,7 @@
         </section>
     </main>
     <!--- JavaScript --->
+    <script src="/js/fetch-api.js"></script>
     <script src="/js/script.js"></script>
 </body>
 
