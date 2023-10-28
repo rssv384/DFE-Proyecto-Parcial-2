@@ -58,8 +58,7 @@ DFE-Proyecto-Parcial-2/    # Carpeta principal del proyecto
 │   │
 │   ├── js/                 # Carpeta para archivos JavaScript
 │   │    ├── fetch-api.js   # JavaScript para el consumo de datos de la API
-│   │    ├── script.js      # JavaScript principal para funcionalidad general
-│   │    └── utils.js       # JavaScript con funciones y utilidades varias (filtros y formato)
+│   │    └── script.js      # JavaScript principal para funcionalidad general
 │   │
 │   └─── index.html       # Homepage
 │
