@@ -83,8 +83,8 @@ function clearTable() {
 
 // Recargar la tabla de tareas
 function reloadToDoList() {
-	document.getElementById('filter-form').reset();
-	getAllTasks();
+	clearFilterForm();
+	getTasks();
 }
 
 // Funcion que muestra mensaje de carga de datos
@@ -137,12 +137,47 @@ function initEditButtonHandler() {
 function initFilterButtonsHandler() {
 	document.getElementById('filter-form').addEventListener('submit', (event) => {
 		event.preventDefault();
-		console.log('Filtrar tareas.');
+		filterTasks();
 	});
 
 	document.getElementById('filter-form').addEventListener('reset', (event) => {
 		event.preventDefault();
+		reloadToDoList();
 	});
+}
+
+function clearFilterForm() {
+	document
+		.getElementById('filter-form')
+		.querySelectorAll('input')
+		.forEach((input) => (input.value = ''));
+	document
+		.getElementById('filter-form')
+		.querySelectorAll('select')
+		.forEach((select) => (select.selectedIndex = 0));
+}
+
+// Obtener los queryParams para la GET request con filtros
+function filterTasks() {
+	const statusFilter = document.getElementById('status-filter').value;
+	let taskStatus = '';
+
+	if (statusFilter === 'true') {
+		taskStatus = true;
+	} else if (statusFilter === 'false') {
+		taskStatus = false;
+	}
+
+	// Obtener valores de los filtros
+	const queryParams = {
+		title: document.getElementById('title-filter').value,
+		completed: taskStatus,
+		priority: document.getElementById('priority-filter').value,
+		tag: document.getElementById('tag-filter').value,
+		dueDate: document.getElementById('due-date-filter').value,
+	};
+
+	getTasks(queryParams);
 }
 // #endregion
 
@@ -168,7 +203,6 @@ function initAddTaskButtonsHandler() {
 		if (mode === 'add') {
 			addTask(task);
 		} else if (mode === 'edit') {
-			console.log(task);
 			editTask(task);
 		}
 	});
@@ -226,29 +260,33 @@ function processTaskForm() {
 
 // #region API USAGE
 // Cargar datos de las tareas
-function getAllTasks() {
-	fetchAPI('tasks', 'GET').then((data) => {
-		const toDoList = mapTasksData(data);
-		displayTasksView(toDoList);
-	});
+function getTasks(queryParams = null) {
+	fetchAPI({ endpoint: 'tasks', method: 'GET', queryParams: queryParams }).then(
+		(data) => {
+			const toDoList = mapTasksData(data);
+			displayTasksView(toDoList);
+		}
+	);
 }
 
 // Agregar una nueva tarea
 function addTask(newTask) {
-	fetchAPI('tasks', 'POST', newTask).then((newTask) => {
-		closeModal();
-		// Recargar tabla de la To-Do List
-		reloadToDoList();
-		// Mostrar mensaje de registro exitoso
-		window.alert(
-			`Se ha agregado una nueva tarea!\n${newTask.id}: ${newTask.title}`
-		);
-	});
+	fetchAPI({ endpoint: 'tasks', method: 'POST', data: newTask }).then(
+		(newTask) => {
+			closeModal();
+			// Recargar tabla de la To-Do List
+			reloadToDoList();
+			// Mostrar mensaje de registro exitoso
+			window.alert(
+				`Se ha agregado una nueva tarea!\n${newTask.id}: ${newTask.title}`
+			);
+		}
+	);
 }
 
 // Obtener datos de una tarea específica
 function getTaskData(taskId) {
-	fetchAPI(`tasks/${taskId}`, 'GET').then((data) => {
+	fetchAPI({ endpoint: `tasks/${taskId}`, method: 'GET' }).then((data) => {
 		// Llenar datos del formulario para editar
 		document.getElementById('id').value = data.id;
 		document.getElementById('title').value = data.title;
@@ -262,7 +300,11 @@ function getTaskData(taskId) {
 
 // Editar datos de la tarea
 function editTask(editedTask) {
-	fetchAPI(`tasks/${editedTask.id}`, 'PUT', editedTask).then((editedTask) => {
+	fetchAPI({
+		endpoint: `tasks/${editedTask.id}`,
+		method: 'PUT',
+		data: editedTask,
+	}).then((editedTask) => {
 		closeModal();
 		// Recargar tabla de la To-Do List
 		reloadToDoList();
@@ -278,7 +320,7 @@ function deleteTask(taskId) {
 	);
 
 	if (confirmation) {
-		fetchAPI(`tasks/${taskId}`, 'DELETE').then(() => {
+		fetchAPI({ endpoint: `tasks/${taskId}`, method: 'DELETE' }).then(() => {
 			reloadToDoList();
 			window.alert(`La tarea ${taskId} ha sido eliminada con éxito.`);
 		});
@@ -289,5 +331,5 @@ function deleteTask(taskId) {
 // #region INIT FUNCTIONALITY
 initFilterButtonsHandler();
 initAddTaskButtonsHandler();
-getAllTasks();
+getTasks();
 // #endregion
